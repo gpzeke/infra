@@ -1,0 +1,30 @@
+services:
+  traefik:
+    image: traefik
+    container_name: "traefik"
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --entryPoints.web.address=:80
+      - --entryPoints.websecure.address=:443
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.websecure.http.tls=true
+      - --certificatesresolvers.certificate.acme.dnschallenge=true
+      - --certificatesresolvers.certificate.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.certificate.acme.dnschallenge.delaybeforecheck=10
+      - --certificatesresolvers.certificate.acme.dnschallenge.resolvers=1.1.1.1:53
+      - --certificatesresolvers.certificate.acme.caserver=https://acme-v02.api.letsencrypt.org/directory
+      - --certificatesresolvers.certificate.acme.storage=/acme/acme.json
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../container/traefik/acme.json:/acme/acme.json
+    environment:
+      CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
+    user: 969:972
+      #CF_ZONE_API_TOKEN: 
+      #TRAEFIK_CERTIFICATESRESOLVERS_CERTIFICATE_ACME_EMAIL:

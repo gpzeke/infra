@@ -1,0 +1,22 @@
+services:
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../container/portainer/data/:/data
+    labels:
+      - "traefik.http.routers.admin.rule=Host(`admin.gpzeke.com`)"
+      - "traefik.http.routers.admin.entrypoints=websecure"
+      - "traefik.enable=true"
+      - "traefik.http.routers.admin.tls.certresolver=certificate"
+      - "traefik.http.routers.admin.tls.domains[0].main=admin.gpzeke.com"
+      - "traefik.http.services.admin.loadbalancer.server.port=9000"
+
+networks:
+  default:
+    external: true
+    name: traefik_default
