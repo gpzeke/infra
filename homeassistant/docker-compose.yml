@@ -6,13 +6,13 @@ services:
     volumes:
       - "../container/homeassistant/config:/config"
     privileged: false
-    labels:
-      - "traefik.http.routers.house.rule=Host(`house.gpzeke.com`)"
-      - "traefik.http.routers.house.entrypoints=websecure"
-      - "traefik.enable=true"
-      - "traefik.http.routers.house.tls.certresolver=certificate"
-      - "traefik.http.routers.house.tls.domains[0].main=house.gpzeke.com"
-      - "traefik.http.services.house.loadbalancer.server.port=8123"
+    #labels:
+    #  - "traefik.http.routers.house.rule=Host(`house.gpzeke.com`)"
+    #  - "traefik.http.routers.house.entrypoints=websecure"
+    #  - "traefik.enable=true"
+    #  - "traefik.http.routers.house.tls.certresolver=certificate"
+    #  - "traefik.http.routers.house.tls.domains[0].main=house.gpzeke.com"
+    #  - "traefik.http.services.house.loadbalancer.server.port=8123"
     #ports:
     #  - "8123:8123"
     network_mode: host
