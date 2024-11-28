@@ -26,5 +26,3 @@ services:
     environment:
       CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
     user: 969:972
-      #CF_ZONE_API_TOKEN: 
-      #TRAEFIK_CERTIFICATESRESOLVERS_CERTIFICATE_ACME_EMAIL:
