@@ -1,0 +1,14 @@
+services:
+  zomboid:
+    image: renegademaster/zomboid-dedicated-server
+    container_name: zomboid
+    restart: unless-stopped
+    volumes:
+      - ../container/ProjectZomboid/ZomboidDedicatedServer:/home/steam/ZomboidDedicatedServer
+      - ../container/ZomboidConfig:/home/steam/Zomboid
+    environment:
+      ADMIN_USERNAME: ${ADMINU}
+      ADMIN_PASSWORD: ${ADMINP}
+      GAME_VERSION: unstable
+      MAX_RAM: 32768
+      

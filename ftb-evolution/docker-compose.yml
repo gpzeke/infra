@@ -1,0 +1,74 @@
+services:
+  ftb-evolution:
+    image: itzg/minecraft-server
+    container_name: ftb-evolution
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565/tcp"
+    labels:
+      - traefik.http.routers.m.rule=Host(`ftb.gpzeke.com`)
+      - traefik.http.routers.ftb-evolution.entrypoints=websecure
+      - traefik.enable=true
+      - traefik.http.routers.ftb-evolution.tls.certresolver=certificate
+      - traefik.http.routers.ftb-evolution.tls.domains[0].main=ftb.gpzeke.com
+    environment:
+      EULA: "TRUE"
+      TYPE: "AUTO_CURSEFORGE"
+      VERSION: "1.21.1"
+      DIFFICULTY: "normal"
+      SERVER_NAME: "Cerulean Haven | FTB Evolution"
+      RCON_PASSWORD: ${RCON_PASSWORD}
+      JVM_DD_OPTS: user.timezone="CDT"
+      LOG_TIMESTAMP: true
+      ENABLE_AUTOPAUSE: true
+      INIT_MEMORY: "6G"
+      MAX_MEMORY: "20G"
+      SNOOPER_ENABLED: false
+      # curse forge specific stuff
+      CF_API_KEY: ${CF_API_KEY}
+      CF_PAGE_URL: "https://www.curseforge.com/minecraft/modpacks/ftb-evolution"
+      CF_FILES: |
+        "https://www.curseforge.com/minecraft/mc-mods/let-me-despawn"
+        "https://www.curseforge.com/minecraft/mc-mods/almanac-lib"
+      # modrinth specific stuff
+      MODRINTH_PROJECTS: |
+        carry-on:2.2.2
+
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+      - ../container/ftb-evolution/data/:/data
+      - /etc/localtime:/etc/localtime:ro
+
+
+
+  backups:
+    image: itzg/mc-backup
+    environment:
+      BACKUP_INTERVAL: "2h"
+      PRUNE_BACKUPS_DAYS: 3
+      PAUSE_IF_NO_PLAYERS: true
+      #TZ: "CDT"
+      RCON_HOST: "ftb-evolution"
+      RCON_PASSWORD: ${RCON_PASSWORD}
+      PRE_BACKUP_SCRIPT: |
+        echo "Before backup!"
+        echo "Also before backup from $$RCON_HOST to $$DEST_DIR"
+      POST_BACKUP_SCRIPT: echo "Backup from $$RCON_HOST to $$DEST_DIR finished"
+
+    volumes:
+      # Should be the same volume used by minecraft server (read-only)
+      - mc:/data:ro
+      # use a host attached directory so that it in turn can be backed up
+      # to external/cloud storage
+      - ../container/ftp-evolutions/mc-backups/:/backups
+      - /etc/localtime:/etc/localtime:ro
+
+networks:
+  default:
+    external: true
+    name: traefik_default
+
+volumes:
+  mc: {}
