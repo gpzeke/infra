@@ -62,7 +62,7 @@ services:
       - mc:/data:ro
       # use a host attached directory so that it in turn can be backed up
       # to external/cloud storage
-      - ../container/ftp-evolutions/mc-backups/:/backups
+      - ../container/ftb-evolutions/mc-backups/:/backups
       - /etc/localtime:/etc/localtime:ro
 
 networks:
