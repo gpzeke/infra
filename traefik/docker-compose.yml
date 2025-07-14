@@ -25,4 +25,4 @@ services:
       - ../container/traefik/acme.json:/acme/acme.json
     environment:
       CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
-    user: 969:972
+    user: 969:970

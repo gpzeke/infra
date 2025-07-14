@@ -23,8 +23,8 @@ services:
       JVM_DD_OPTS: user.timezone="CDT"
       LOG_TIMESTAMP: true
       ENABLE_AUTOPAUSE: true
-      INIT_MEMORY: "6G"
-      MAX_MEMORY: "20G"
+      INIT_MEMORY: "8G"
+      MAX_MEMORY: "32G"
       SNOOPER_ENABLED: false
       # curse forge specific stuff
       CF_API_KEY: ${CF_API_KEY}
@@ -46,7 +46,7 @@ services:
   backups:
     image: itzg/mc-backup
     environment:
-      BACKUP_INTERVAL: "2h"
+      BACKUP_INTERVAL: "30m"
       PRUNE_BACKUPS_DAYS: 3
       PAUSE_IF_NO_PLAYERS: true
       #TZ: "CDT"
