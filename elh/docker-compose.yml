@@ -1,0 +1,33 @@
+services:
+  elh:
+    image: itzg/minecraft-server
+    container_name: elh
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565/tcp"
+    labels:
+      - traefik.http.routers.ftb.rule=Host(`ftb.gpzeke.com`)
+      - traefik.http.routers.ftb-evolution.entrypoints=websecure
+      - traefik.enable=true
+      - traefik.http.routers.ftb-evolution.tls.certresolver=certificate
+      - traefik.http.routers.ftb-evolution.tls.domains[0].main=ftb.gpzeke.com
+    environment:
+      VERSION: 1.20.1
+      EULA: TRUE
+      INIT_MEMORY: "8G"
+      MAX_MEMORY: "32G"
+
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+      - ../container/elh/data/:/data
+      - /etc/localtime:/etc/localtime:ro
+
+networks:
+  default:
+    external: true
+    name: traefik_default
+
+volumes:
+  mc: {}

@@ -1,0 +1,24 @@
+services:
+  vsserver:
+    image: devidian/vintagestory:latest
+    container_name: vintage-story
+    stdin_open: true
+    tty: false
+    restart: unless-stopped
+    ports:
+      - "42420:42420"
+    volumes:
+      - ../container/vintage-story/gamedata:/gamedata
+#      - VS_DATA_PATH: '/var/vintagestory/data'
+#    labels:
+#      - traefik.http.routers.vs.rule=Host(`vs.gpzeke.com`)
+#      - traefik.http.routers.vs.entrypoints=websecure
+#      - traefik.enable=true
+#      - traefik.http.routers.vs.tls.certresolver=certificate
+#      - traefik.http.routers.vs.tls.domains[0].main=vs.gpzeke.com
+#      - traefik.http.services.vintage-story.loadbalancer.server.port=42420
+
+#networks:
+#  default:
+#    external: true
+#    name: traefik_default

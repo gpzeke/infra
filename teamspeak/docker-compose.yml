@@ -1,0 +1,43 @@
+services:
+  teamspeak:
+    image: teamspeaksystems/teamspeak6-server:latest
+    container_name: teamspeak
+    restart: unless-stopped
+    #ports:
+      #- "9987:9987/udp"   # Voice Port
+      #- "30033:30033/tcp" # File Transfer
+      #- "10080:10080/tcp" # Web Query
+    environment:
+      - TSSERVER_LICENSE_ACCEPTED=accept
+    volumes:
+      - ../container/teamspeak-data:/var/tsserver/
+    labels:
+      - traefik.enable=true
+      # Enable UDP Route for Voice
+      - traefik.udp.routers.teamspeak-voice.entrypoints=teamspeak-voice
+      - traefik.udp.routers.teamspeak-voice.service=teamspeak-voice-service
+      - traefik.udp.services.teamspeak-voice-service.loadbalancer.server.port=9987
+
+      # Enable TCP Route for Query
+      - traefik.tcp.routers.teamspeak-query.entrypoints=teamspeak-query
+      - traefik.tcp.routers.teamspeak-query.rule=HostSNI(`*`)
+      - traefik.tcp.routers.teamspeak-query.service=teamspeak-loadbalancer-query
+      - traefik.tcp.services.teamspeak-loadbalancer-query.loadbalancer.server.port=10080
+      # Enable TCP Route for Data
+      - traefik.tcp.routers.teamspeak-data.entrypoints=teamspeak-data
+      - traefik.tcp.routers.teamspeak-data.rule=HostSNI(`*`)
+      - traefik.tcp.routers.teamspeak-data.service=teamspeak-loadbalancer-data
+      - traefik.tcp.services.teamspeak-loadbalancer-data.loadbalancer.server.port=30033
+      #
+      - traefik.http.routers.comms.rule=Host(`comms.gpzeke.com`)
+      - traefik.http.routers.comms.entrypoints=websecure
+      - traefik.http.routers.comms.tls.certresolver=certificate
+      - traefik.http.routers.comms.tls.domains[0].main=comms.gpzeke.com
+
+networks:
+  default:
+    external: true
+    name: traefik_default
+
+volumes:
+  teamspeak-data:

@@ -3,6 +3,9 @@ services:
     image: traefik
     container_name: "traefik"
     command:
+      # Enable ping
+      - --ping=true
+      - --ping.entryPoint=web
       - --api.insecure=true
       - --providers.docker=true
       - --entryPoints.web.address=:80
@@ -14,12 +17,23 @@ services:
       - --certificatesresolvers.certificate.acme.dnschallenge=true
       - --certificatesresolvers.certificate.acme.dnschallenge.provider=cloudflare
       - --certificatesresolvers.certificate.acme.dnschallenge.delaybeforecheck=10
-      - --certificatesresolvers.certificate.acme.dnschallenge.resolvers=1.1.1.1:53
       - --certificatesresolvers.certificate.acme.caserver=https://acme-v02.api.letsencrypt.org/directory
       - --certificatesresolvers.certificate.acme.storage=/acme/acme.json
+      # Teamspeak specific:
+      - --entryPoints.teamspeak-voice.address=:9987/udp
+      - --entryPoints.teamspeak-query.address=:10080
+      - --entryPoints.teamspeak-data.address=:30033
+
     ports:
       - 80:80
       - 443:443
+      - 8080:8080
+      # Teamspeak ports
+      - 9987:9987/udp
+      - 10080:10080/tcp
+      - 30033:30033/tcp
+      # Vintage Story port
+      #- 42420:42420
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ../container/traefik/acme.json:/acme/acme.json

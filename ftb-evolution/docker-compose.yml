@@ -8,7 +8,7 @@ services:
     ports:
       - "25565:25565/tcp"
     labels:
-      - traefik.http.routers.m.rule=Host(`ftb.gpzeke.com`)
+      - traefik.http.routers.ftb.rule=Host(`ftb.gpzeke.com`)
       - traefik.http.routers.ftb-evolution.entrypoints=websecure
       - traefik.enable=true
       - traefik.http.routers.ftb-evolution.tls.certresolver=certificate
