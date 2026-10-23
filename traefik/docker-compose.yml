@@ -23,6 +23,9 @@ services:
       - --entryPoints.teamspeak-voice.address=:9987/udp
       - --entryPoints.teamspeak-query.address=:10080
       - --entryPoints.teamspeak-data.address=:30033
+      # Enshrouded UDP
+      - --entryPoints.enshrouded-game.address=:15636/udp
+      - --entryPoints.enshrouded-query.address=:15637/udp
 
     ports:
       - 80:80
@@ -32,8 +35,13 @@ services:
       - 9987:9987/udp
       - 10080:10080/tcp
       - 30033:30033/tcp
+      # Enshrouded UDP
+      - 15636:15636/udp
+      - 15637:15637/udp
       # Vintage Story port
       #- 42420:42420
+      # Enshrouded Ports
+      
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ../container/traefik/acme.json:/acme/acme.json

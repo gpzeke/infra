@@ -1,0 +1,44 @@
+services:
+  enshrouded:
+    image: mornedhels/enshrouded-server:latest
+    container_name: enshrouded
+    hostname: enshrouded
+    restart: unless-stopped
+    stop_grace_period: 90s
+    volumes:
+      - ../container/enshrouded/game:/opt/enshrouded
+    labels:
+      - traefik.enable=true
+      - traefik.udp.routers.enshrouded-game.entrypoints=enshrouded-game
+      - traefik.udp.routers.enshrouded-game.service=enshrouded-game
+      - traefik.udp.services.enshrouded-game.loadbalancer.server.port=15636
+      - traefik.udp.routers.enshrouded-query.entrypoints=enshrouded-query
+      - traefik.udp.routers.enshrouded-query.service=enshrouded-query
+      - traefik.udp.services.enshrouded-query.loadbalancer.server.port=15637
+    environment:
+      - SERVER_NAME=Cerulean Haven | Enshrouded
+      - UPDATE_CRON=*/30 * * * *
+      - PUID=4711
+      - PGID=4711
+      # Server Roles
+        # Admins
+      - SERVER_ROLE_0_NAME=Administrators
+      - SERVER_ROLE_0_PASSWORD=${ADMIN_PASS}
+      - SERVER_ROLE_0_CAN_KICK_BAN=true
+      - SERVER_ROLE_0_CAN_ACCESS_INVENTORIES=true
+      - SERVER_ROLE_0_CAN_EDIT_WORLD=true
+      - SERVER_ROLE_0_CAN_EDIT_BASE=true
+      - SERVER_ROLE_0_CAN_EXTEND_BASE=true
+      - SERVER_ROLE_0_RESERVED_SLOTS=1
+        # Players
+      - SERVER_ROLE_1_NAME=Players
+      - SERVER_ROLE_1_PASSWORD=${PLAYER_PASS}
+      - SERVER_ROLE_0_CAN_ACCESS_INVENTORIES=true
+      - SERVER_ROLE_0_CAN_EDIT_WORLD=true
+      - SERVER_ROLE_0_CAN_EDIT_BASE=true
+      - SERVER_ROLE_0_CAN_EXTEND_BASE=true
+
+networks:
+  default:
+    external: true
+    name: traefik_default
